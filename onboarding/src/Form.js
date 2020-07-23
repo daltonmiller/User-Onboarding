@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import * as yup from 'yup'
 import axios from 'axios'
-
+import styled from 'styled-components'
 
 const formSchema = yup.object().shape({
     name: yup.string()
@@ -82,7 +82,7 @@ const formSubmit = (e) => {
     console.log("form submitted")
     axios.post('https://reqres.in/api/users', formState)
     .then( response => 
-        setPost([...post, `A name was submitted: ${response.data.name.trim()}, their email is: ${response.data.email.trim()}, and their motivation is: ${response.data.motivation}. his position is ${response.data.positions} agreed ${response.data.terms}`]))
+        setPost([...post, <Team>`name: {response.data.name.trim()},  Email: {response.data.email.trim()}, motivation: {response.data.motivation}. position: {response.data.positions} agreed {response.data.terms}`</Team>]))
           
     
     .catch(err => console.log(err))
@@ -96,7 +96,8 @@ const formSubmit = (e) => {
 
             hey
             <form onSubmit={formSubmit}>
-                <div>
+                <FullPage>
+                <NameDiv>
                 <label htmlFor="name">
                     name
                     <input 
@@ -109,7 +110,7 @@ const formSubmit = (e) => {
                      />
                      {errorState.name ? <p>{errorState.name}</p> : null}
                 </label>
-                </div>
+                </NameDiv>
                 <div>
                 <label htmlFor="email">
                     email
@@ -124,10 +125,10 @@ const formSubmit = (e) => {
                 </label>
 
                 </div>
-                <div>
+                <EmailDiv>
                 <label htmlFor="motivation">
-                    motivation
-                    <textarea
+                    password
+                    <input
                     type="text"
                      name="motivation" 
                      id="motivation"
@@ -135,10 +136,10 @@ const formSubmit = (e) => {
                      onChange={inputChange}
                      />
                 </label>
-                </div>
-                <div>
+                </EmailDiv>
+                <DropDown>
                 <label htmlFor="positions">
-                    what would you like help with
+                    <div>what would you like help with</div>
                     <select 
                     value={formState.position} 
                     name="positions" 
@@ -149,8 +150,8 @@ const formSubmit = (e) => {
                         <option value="tabling">tabling</option>
                     </select>
                 </label>
-                </div>
-                <div>
+                </DropDown>
+                <Terms>
                     <label htmlFor="terms">
                         <input 
                         type="checkbox"
@@ -158,14 +159,54 @@ const formSubmit = (e) => {
                         name="terms"
                         checked={formState.terms}
                         onChange={checkBoxChange} />
-                        i have read the terms and conditions
+                        <p>i have read the terms and conditions</p>
 
                     </label>
-                </div>
+                </Terms>
                 <button disabled={isDisabled}>submit</button>
-
+                </FullPage>
             </form>
         </div>
     )
 }
+const FullPage = styled.div`
+border: 1px solid black;
+margin: 100px;
+padding: 50px;
+`
+const NameDiv = styled.div`
+margin: 25px;
+`
+const EmailDiv = styled.div`
+margin:25px;
+`
+const DropDown = styled.div`
+margin: 25px;
+display: flex;
+flex-direction: column;
+`
+const Terms = styled.div`
+margin: 25px;
+justify-content: flex-end;
+`
+const Team = styled.div`
+transition: box-shadow .3s;
+color: white;
+background-color: black;
+display: flex;
+flex-direction: column;
+flex-wrap: wrap;
+max-width: 100px;
+border: 1px solid black;
+margin: 10px;
+padding: 40px;
+padding-right: 150px;
+border-radius: 15px;
+
+&:hover{
+    box-shadow: 0 0 19px 
+    rgba(43,43,43,.5); 
+  }
+
+`
 export default Form
